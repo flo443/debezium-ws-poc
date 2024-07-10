@@ -2,6 +2,7 @@ package com.example.boundry;
 
 import com.example.control.WebSocketService;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.websocket.OnClose;
 import jakarta.websocket.OnError;
 import jakarta.websocket.OnOpen;
 import jakarta.websocket.Session;
@@ -25,6 +26,13 @@ public class WebSocketGateway {
         var id = UUID.fromString(idString);
         log.info("opened for [{}]", id);
         service.addSession(id, session);
+    }
+
+    @OnClose
+    public void onClose(Session session, @PathParam("id") String idString) {
+        var id = UUID.fromString(idString);
+        log.info("closed for [{}]", id);
+        service.removeSession(id);
     }
 
     @OnError
